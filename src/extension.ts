@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as webreq from 'web-request';
 
-function createIQManifestFile() {
+async function createIQManifestFile(id: string) {
     let newFile = null;
 
     if (vscode.workspace.rootPath) {
@@ -11,7 +12,7 @@ function createIQManifestFile() {
             const edit = new vscode.WorkspaceEdit();
             edit.insert(newFile, new vscode.Position(0, 0),
                 `<iq:manifest version="1">
-    <iq:application entry="" id="" name="" launcherIcon="" type="" minSdkVersion="">
+    <iq:application entry="" id="${id}" name="" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
             <iq:product id="d2bravo"/>
             <iq:product id="d2bravo_titanium"/>
@@ -64,10 +65,26 @@ function createIQManifestFile() {
     }
 }
 
-export function activate(context: vscode.ExtensionContext) {
-    var disposable = vscode.commands.registerCommand('extension.newiqproject', () => {
-        createIQManifestFile();
-    });
+async function getUUID() {
+    let newID: string = "";
+
+    let req = await webreq.get("https://www.uuidgenerator.net/api/version1");
+    newID = req.content;
+    newID = newID.replace(/-/g, '');
+    newID = newID.trim();
+    
+    return newID;
+}
+
+async function newIQProject() {
+    let newId = await getUUID();
+
+    await createIQManifestFile(newId);
+}
+
+export async function activate(context: vscode.ExtensionContext) {
+
+    var disposable = vscode.commands.registerCommand('extension.newiqproject', newIQProject);
 
     context.subscriptions.push(disposable);
 }
