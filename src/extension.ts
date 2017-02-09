@@ -14,6 +14,11 @@ async function createIQManifestFile(id: string) {
                 `<iq:manifest version="1">
     <iq:application entry="" id="${id}" name="" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
+            <!-- All of the available products are listed below. Delete any that are not
+                 targeted by your app. -->
+            <iq:product id="square_watch"/>
+            <iq:product id="tall_watch"/>
+            <iq:product id="round_watch"/>
             <iq:product id="d2bravo"/>
             <iq:product id="d2bravo_titanium"/>
             <iq:product id="edge_520"/>
@@ -37,6 +42,8 @@ async function createIQManifestFile(id: string) {
             <iq:product id="rino7xx"/>
         </iq:products>
         <iq:permissions>
+            <!-- All of the available permissions are listed below. Delete any that
+                 your app does not require. -->
             <iq:uses-permission id="Communications"/>
             <iq:uses-permission id="Fit"/>
             <iq:uses-permission id="Ant"/>
@@ -45,6 +52,8 @@ async function createIQManifestFile(id: string) {
             <iq:uses-permission id="Sensor"/>
             <iq:uses-permission id="Positioning"/>
             <iq:uses-permission id="UserProfile"/>
+            <iq:uses-permission id="PersistedContent"/>
+            <iq:uses-permission id="PersistedLocations"/>
         </iq:permission>
         <iq:languages>
             <iq:language>eng</iq:language>
@@ -72,7 +81,7 @@ async function getUUID() {
     newID = req.content;
     newID = newID.replace(/-/g, '');
     newID = newID.trim();
-    
+
     return newID;
 }
 
