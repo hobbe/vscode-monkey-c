@@ -56,7 +56,38 @@ async function createIQManifestFile(id: string) {
             <iq:uses-permission id="PersistedLocations"/>
         </iq:permission>
         <iq:languages>
+            <!-- All of the available languages are listed below. Delete any that
+                 will not be supported by your app. -->
+            <iq:language>ara</iq:language>
+            <iq:language>bul</iq:language>
+            <iq:language>ces</iq:language>
+            <iq:language>dan</iq:language>
+            <iq:language>deu</iq:language>
+            <iq:language>dut</iq:language>
             <iq:language>eng</iq:language>
+            <iq:language>fin</iq:language>
+            <iq:language>fre</iq:language>
+            <iq:language>gre</iq:language>
+            <iq:language>heb</iq:language>
+            <iq:language>hrv</iq:language>
+            <iq:language>hun</iq:language>
+            <iq:language>ind</iq:language>
+            <iq:language>ita</iq:language>
+            <iq:language>jpn</iq:language>
+            <iq:language>kor</iq:language>
+            <iq:language>nob</iq:language>
+            <iq:language>pol</iq:language>
+            <iq:language>por</iq:language>
+            <iq:language>rus</iq:language>
+            <iq:language>slo</iq:language>
+            <iq:language>slv</iq:language>
+            <iq:language>spa</iq:language>
+            <iq:language>swe</iq:language>
+            <iq:language>tha</iq:language>
+            <iq:language>tur</iq:language>
+            <iq:language>zhs</iq:language>
+            <iq:language>zht</iq:language>
+            <iq:language>zsm</iq:language>
         </iq:languages>
     </iq:application>
  </iq:manifest>`);
