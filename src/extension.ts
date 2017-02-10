@@ -96,12 +96,12 @@ function createIQManifestFile(id: string, name: string) {
                 if (success) {
                     vscode.window.showTextDocument(document);
                 } else {
-                    vscode.window.showInformationMessage('Could not create Connect IQ Manifest file.');
+                    vscode.window.showInformationMessage('Could not create Connect IQ app Manifest file.');
                 }
             });
         });
     } else {
-        vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ project.");
+        vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ app.");
     }
 }
 
@@ -117,21 +117,25 @@ async function getUUID() {
 }
 
 async function newIQProject() {
-    let newId = await getUUID();
+    if (!vscode.workspace.rootPath) {
+        vscode.window.showErrorMessage("Please create and open a folder for your new Connect IQ app.")
+    } else {
+        let newId = await getUUID();
 
-    getProjectName().then(projectName => {
-        if (projectName) {
-            createIQManifestFile(newId, projectName);
-        } else {
-            vscode.window.showErrorMessage("Please provide a name for this new project.");
-        }
-    });
+        getProjectName().then(projectName => {
+            if (projectName) {
+                createIQManifestFile(newId, projectName);
+            } else {
+                vscode.window.showErrorMessage("Please provide a name for this new app.");
+            }
+        });
+    }    
 }
 
 function getProjectName() {
     let options: vscode.InputBoxOptions = {
-        prompt: "Name for new ConnectIQ project: ",
-        placeHolder: "project name"
+        prompt: "Name for new ConnectIQ app: ",
+        placeHolder: "app name"
     }
 
     return vscode.window.showInputBox(options).then(value => {
