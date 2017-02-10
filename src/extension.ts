@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as webreq from 'web-request';
 
-async function createIQManifestFile(id: string) {
+function createIQManifestFile(id: string, name: string) {
     let newFile = null;
 
     if (vscode.workspace.rootPath) {
@@ -12,7 +12,7 @@ async function createIQManifestFile(id: string) {
             const edit = new vscode.WorkspaceEdit();
             edit.insert(newFile, new vscode.Position(0, 0),
                 `<iq:manifest version="1">
-    <iq:application entry="" id="${id}" name="" launcherIcon="" type="" minSdkVersion="">
+    <iq:application entry="" id="${id}" name="${name}" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
             <!-- All of the available products are listed below. Delete any that are not
                  targeted by your app. -->
@@ -119,7 +119,28 @@ async function getUUID() {
 async function newIQProject() {
     let newId = await getUUID();
 
-    await createIQManifestFile(newId);
+    getProjectName().then(projectName => {
+        if (projectName) {
+            createIQManifestFile(newId, projectName);
+        } else {
+            vscode.window.showErrorMessage("Please provide a name for this new project.");
+        }
+    });
+}
+
+function getProjectName() {
+    let options: vscode.InputBoxOptions = {
+        prompt: "Name for new ConnectIQ project: ",
+        placeHolder: "project name"
+    }
+
+    return vscode.window.showInputBox(options).then(value => {
+        if (!value) {
+            return;
+        } else {
+            return value;
+        }    
+    });
 }
 
 export async function activate(context: vscode.ExtensionContext) {
