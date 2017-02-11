@@ -3,14 +3,7 @@ import * as path from 'path';
 import * as webreq from 'web-request';
 
 function createIQManifestFile(id: string, name: string) {
-    let newFile = null;
-
-    if (vscode.workspace.rootPath) {
-        newFile = vscode.Uri.parse('untitled:' + path.join(vscode.workspace.rootPath, 'manifest.xml'))
-
-        vscode.workspace.openTextDocument(newFile).then(document => {
-            const edit = new vscode.WorkspaceEdit();
-            edit.insert(newFile, new vscode.Position(0, 0),
+    createFile('manifest..xml', 
                 `<iq:manifest version="1">
     <iq:application entry="" id="${id}" name="${name}" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
@@ -90,19 +83,65 @@ function createIQManifestFile(id: string, name: string) {
             <iq:language>zsm</iq:language>
         </iq:languages>
     </iq:application>
- </iq:manifest>`);
+ </iq:manifest>`,
+    true);
+}
+
+function createAppFile(appName: string) {
+    createFile(`src/${appName}App.mc`,
+        `using Toybox.Application as App;
+using Toybox.WatchUi as Ui;
+
+class ${appName}App extends App.AppBase {
+
+    function initialize() {
+        AppBase.initialize();
+    }
+
+    // onStart() is called on application start up
+    function onStart(state) {
+    }
+
+    // onStop() is called when your application is exiting
+    function onStop(state) {
+    }
+
+    // Return the initial view of your application here
+    function getInitialView() {
+        return [ new ${appName}View(), new ${appName}Delegate() ];
+    }
+
+}`, true);
+}
+
+function createFile(filename: string, content: string, showAfter: boolean) {
+    let newFile = null;
+
+    if (vscode.workspace.rootPath) {
+        newFile = vscode.Uri.parse('untitled:' + path.join(vscode.workspace.rootPath, filename));
+
+        vscode.workspace.openTextDocument(newFile).then(document => {
+            const edit = new vscode.WorkspaceEdit();
+            edit.insert(newFile, new vscode.Position(0, 0), content);
 
             return vscode.workspace.applyEdit(edit).then(success => {
                 if (success) {
-                    vscode.window.showTextDocument(document);
+                    if (showAfter) {
+                        vscode.window.showTextDocument(document);
+                    }    
                 } else {
-                    vscode.window.showInformationMessage('Could not create Connect IQ app Manifest file.');
+                    console.error(`vscode-monkey-c: Could not create file ${filename}`);
+                    vscode.window.showErrorMessage('Could not create a file; ConnectIQ app creation may have failed.');
                 }
             });
         });
     } else {
         vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ app.");
     }
+}
+
+function createSrcFiles(appName: string) {
+    createAppFile(appName);
 }
 
 async function getUUID() {
@@ -125,6 +164,7 @@ async function newIQProject() {
         getProjectName().then(projectName => {
             if (projectName) {
                 createIQManifestFile(newId, projectName);
+                createSrcFiles(projectName);
             } else {
                 vscode.window.showErrorMessage("Please provide a name for this new app.");
             }
