@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as webreq from 'web-request';
 
 function createIQManifestFile(id: string, name: string) {
-    createFile('manifest..xml', 
+    createFile('manifest.xml', 
                 `<iq:manifest version="1">
     <iq:application entry="" id="${id}" name="${name}" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
@@ -191,7 +191,7 @@ class ${appName}View extends Ui.View {
 `, false);
 }
 
-function createFile(filename: string, content: string, showAfter: boolean, save: boolean = true) {
+function createFile(filename: string, content: string, showAfter: boolean = false, save: boolean = true) {
     let newFile = null;
 
     if (vscode.workspace.rootPath) {
@@ -215,6 +215,8 @@ function createFile(filename: string, content: string, showAfter: boolean, save:
                     vscode.window.showErrorMessage('Could not create a file; ConnectIQ app creation may have failed.');
                 }
             });
+        }, err => {
+            console.error(`error: ${err}`);
         });
     } else {
         vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ app.");
@@ -226,6 +228,48 @@ function createSrcFiles(appName: string) {
     createDelegateFile(appName);
     createMenuDelegateFile(appName);
     createViewFile(appName);
+}
+
+function createDrawablesFiles() {
+    createFile('resources/drawables/drawables.xml',
+        `<drawables>
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+</drawables>`);
+}
+
+function createLayoutFile() {
+    createFile('resources/layouts/layout.xml',
+        `<layout id="MainLayout">
+    <label x="center" y="5" text="@Strings.prompt" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+    <bitmap id="id_monkey" x="center" y="30" filename="../drawables/monkey.png" />
+</layout>`);
+}
+
+function createMenuFile() {
+    createFile('resources/menus/menu.xml',
+        `<menu id="MainMenu">
+    <menu-item id="item_1">@Strings.menu_label_1</menu-item>
+    <menu-item id="item_2">@Strings.menu_label_2</menu-item>
+</menu>`);
+}
+
+function createStringsFile(appName: string) {
+    createFile('resources/strings/strings.xml',
+        `<strings>
+    <string id="AppName">${appName}</string>
+
+    <string id="prompt">Click the menu button</string>
+
+    <string id="menu_label_1">Item 1</string>
+    <string id="menu_label_2">Item 2</string>
+</strings>`);
+}
+
+function createResourceFiles(appName: string) {
+    createDrawablesFiles();
+    createLayoutFile();
+    createMenuFile();
+    createStringsFile(appName);
 }
 
 async function getUUID() {
@@ -249,6 +293,7 @@ async function newIQProject() {
             if (projectName) {
                 createIQManifestFile(newId, projectName);
                 createSrcFiles(projectName);
+                createResourceFiles(projectName);
             } else {
                 vscode.window.showErrorMessage("Please provide a name for this new app.");
             }
