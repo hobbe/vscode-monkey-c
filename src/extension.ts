@@ -114,7 +114,84 @@ class ${appName}App extends App.AppBase {
 }`, true);
 }
 
-function createFile(filename: string, content: string, showAfter: boolean) {
+function createDelegateFile(appName: string) {
+    createFile(`src/${appName}Delegate.mc`,
+        `using Toybox.WatchUi as Ui;
+
+class ${appName}Delegate extends Ui.BehaviorDelegate {
+
+    function initialize() {
+        BehaviorDelegate.initialize();
+    }
+
+    function onMenu() {
+        Ui.pushView(new Rez.Menus.MainMenu(), new ${appName}MenuDelegate(), Ui.SLIDE_UP);
+        return true;
+    }
+
+}`, false);
+}
+
+function createMenuDelegateFile(appName: string) {
+    createFile(`src/${appName}MenuDelegate.mc`,
+        `using Toybox.WatchUi as Ui;
+using Toybox.System as Sys;
+
+class ${appName}MenuDelegate extends Ui.MenuInputDelegate {
+
+    function initialize() {
+        MenuInputDelegate.initialize();
+    }
+
+    function onMenuItem(item) {
+        if (item == :item_1) {
+            Sys.println("item 1");
+        } else if (item == :item_2) {
+            Sys.println("item 2");
+        }
+    }
+
+}`, false);
+}
+
+function createViewFile(appName: string) {
+    createFile(`src/${appName}View.mc`,
+        `using Toybox.WatchUi as Ui;
+
+class ${appName}View extends Ui.View {
+
+    function initialize() {
+        View.initialize();
+    }
+
+    // Load your resources here
+    function onLayout(dc) {
+        setLayout(Rez.Layouts.MainLayout(dc));
+    }
+
+    // Called when this View is brought to the foreground. Restore
+    // the state of this View and prepare it to be shown. This includes
+    // loading resources into memory.
+    function onShow() {
+    }
+
+    // Update the view
+    function onUpdate(dc) {
+        // Call the parent onUpdate function to redraw the layout
+        View.onUpdate(dc);
+    }
+
+    // Called when this View is removed from the screen. Save the
+    // state of this View here. This includes freeing resources from
+    // memory.
+    function onHide() {
+    }
+
+}
+`, false);
+}
+
+function createFile(filename: string, content: string, showAfter: boolean, save: boolean = true) {
     let newFile = null;
 
     if (vscode.workspace.rootPath) {
@@ -128,7 +205,11 @@ function createFile(filename: string, content: string, showAfter: boolean) {
                 if (success) {
                     if (showAfter) {
                         vscode.window.showTextDocument(document);
-                    }    
+                    }
+
+                    if (save) {
+                        document.save();
+                    }
                 } else {
                     console.error(`vscode-monkey-c: Could not create file ${filename}`);
                     vscode.window.showErrorMessage('Could not create a file; ConnectIQ app creation may have failed.');
@@ -142,6 +223,9 @@ function createFile(filename: string, content: string, showAfter: boolean) {
 
 function createSrcFiles(appName: string) {
     createAppFile(appName);
+    createDelegateFile(appName);
+    createMenuDelegateFile(appName);
+    createViewFile(appName);
 }
 
 async function getUUID() {
