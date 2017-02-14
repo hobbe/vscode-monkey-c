@@ -7,8 +7,8 @@ let filesToCreate: Array<fileData> = new Array<fileData>();
 
 function createIQManifestFile(id: string, name: string) {
     filesToCreate.push(['manifest.xml', 
-                `<iq:manifest version="1">
-    <iq:application entry="" id="${id}" name="${name}" launcherIcon="" type="" minSdkVersion="">
+                `<iq:manifest xmlns:iq="http://www.garmin.com/xml/connectiq" version="3">
+    <iq:application entry="${name}" id="${id}" name="@Strings.AppName" launcherIcon="@Drawables.LauncherIcon" type="watch-app" minSdkVersion="1.2.0">
         <iq:products>
             <!-- All of the available products are listed below. Delete any that are not
                  targeted by your app. -->
@@ -50,7 +50,7 @@ function createIQManifestFile(id: string, name: string) {
             <iq:uses-permission id="UserProfile"/>
             <iq:uses-permission id="PersistedContent"/>
             <iq:uses-permission id="PersistedLocations"/>
-        </iq:permission>
+        </iq:permissions>
         <iq:languages>
             <!-- All of the available languages are listed below. Delete any that
                  will not be supported by your app. -->
