@@ -2,8 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as webreq from 'web-request';
 
+type fileData = [string, string];
+let filesToCreate: Array<fileData> = new Array<fileData>();
+
 function createIQManifestFile(id: string, name: string) {
-    createFile('manifest.xml', 
+    filesToCreate.push(['manifest.xml', 
                 `<iq:manifest version="1">
     <iq:application entry="" id="${id}" name="${name}" launcherIcon="" type="" minSdkVersion="">
         <iq:products>
@@ -83,12 +86,11 @@ function createIQManifestFile(id: string, name: string) {
             <iq:language>zsm</iq:language>
         </iq:languages>
     </iq:application>
- </iq:manifest>`,
-    true);
+ </iq:manifest>`]);
 }
 
-function createAppFile(appName: string) {
-    createFile(`src/${appName}App.mc`,
+function createAppFile(appName: string): fileData {
+    return [`src/${appName}App.mc`,
         `using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -111,11 +113,11 @@ class ${appName}App extends App.AppBase {
         return [ new ${appName}View(), new ${appName}Delegate() ];
     }
 
-}`, true);
+}`];
 }
 
-function createDelegateFile(appName: string) {
-    createFile(`src/${appName}Delegate.mc`,
+function createDelegateFile(appName: string): fileData {
+    return [`src/${appName}Delegate.mc`,
         `using Toybox.WatchUi as Ui;
 
 class ${appName}Delegate extends Ui.BehaviorDelegate {
@@ -129,11 +131,11 @@ class ${appName}Delegate extends Ui.BehaviorDelegate {
         return true;
     }
 
-}`, false);
+}`];
 }
 
-function createMenuDelegateFile(appName: string) {
-    createFile(`src/${appName}MenuDelegate.mc`,
+function createMenuDelegateFile(appName: string): fileData {
+    return [`src/${appName}MenuDelegate.mc`,
         `using Toybox.WatchUi as Ui;
 using Toybox.System as Sys;
 
@@ -151,11 +153,11 @@ class ${appName}MenuDelegate extends Ui.MenuInputDelegate {
         }
     }
 
-}`, false);
+}`];
 }
 
-function createViewFile(appName: string) {
-    createFile(`src/${appName}View.mc`,
+function createViewFile(appName: string): fileData {
+    return [`src/${appName}View.mc`,
         `using Toybox.WatchUi as Ui;
 
 class ${appName}View extends Ui.View {
@@ -188,34 +190,58 @@ class ${appName}View extends Ui.View {
     }
 
 }
-`, false);
+`];
 }
 
-function createFile(filename: string, content: string, showAfter: boolean = false, save: boolean = true) {
+function createDrawablesFiles(): fileData {
+    return ['resources/drawables/drawables.xml',
+        `<drawables>
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+</drawables>`];
+}
+
+function createLayoutFile(): fileData {
+    return ['resources/layouts/layout.xml',
+        `<layout id="MainLayout">
+    <label x="center" y="5" text="@Strings.prompt" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+    <bitmap id="id_monkey" x="center" y="30" filename="../drawables/monkey.png" />
+</layout>`];
+}
+
+function createMenuFile(): fileData {
+    return ['resources/menus/menu.xml',
+        `<menu id="MainMenu">
+    <menu-item id="item_1">@Strings.menu_label_1</menu-item>
+    <menu-item id="item_2">@Strings.menu_label_2</menu-item>
+</menu>`];
+}
+
+function createStringsFile(appName: string): fileData {
+    return ['resources/strings/strings.xml',
+        `<strings>
+    <string id="AppName">${appName}</string>
+
+    <string id="prompt">Click the menu button</string>
+
+    <string id="menu_label_1">Item 1</string>
+    <string id="menu_label_2">Item 2</string>
+</strings>`];
+}
+
+function createFile(filename: string, content: string) {
     let newFile = null;
 
     if (vscode.workspace.rootPath) {
         newFile = vscode.Uri.parse('untitled:' + path.join(vscode.workspace.rootPath, filename));
 
-        vscode.workspace.openTextDocument(newFile).then(document => {
-            const edit = new vscode.WorkspaceEdit();
-            edit.insert(newFile, new vscode.Position(0, 0), content);
-
-            return vscode.workspace.applyEdit(edit).then(success => {
-                if (success) {
-                    if (showAfter) {
-                        vscode.window.showTextDocument(document);
-                    }
-
-                    if (save) {
-                        document.save();
-                    }
-                } else {
-                    console.error(`vscode-monkey-c: Could not create file ${filename}`);
-                    vscode.window.showErrorMessage('Could not create a file; ConnectIQ app creation may have failed.');
-                }
+        return vscode.workspace.openTextDocument(newFile).then((doc: vscode.TextDocument) => {
+            return vscode.window.showTextDocument(doc, 1, true).then(e => {
+                e.edit(edit => {
+                    edit.insert(new vscode.Position(0, 0), content);
+                    console.log(`Inserted into ${filename}`);
+                });
             });
-        }, err => {
+        }, (err) => {
             console.error(`error: ${err}`);
         });
     } else {
@@ -224,52 +250,17 @@ function createFile(filename: string, content: string, showAfter: boolean = fals
 }
 
 function createSrcFiles(appName: string) {
-    createAppFile(appName);
-    createDelegateFile(appName);
-    createMenuDelegateFile(appName);
-    createViewFile(appName);
-}
-
-function createDrawablesFiles() {
-    createFile('resources/drawables/drawables.xml',
-        `<drawables>
-    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-</drawables>`);
-}
-
-function createLayoutFile() {
-    createFile('resources/layouts/layout.xml',
-        `<layout id="MainLayout">
-    <label x="center" y="5" text="@Strings.prompt" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
-    <bitmap id="id_monkey" x="center" y="30" filename="../drawables/monkey.png" />
-</layout>`);
-}
-
-function createMenuFile() {
-    createFile('resources/menus/menu.xml',
-        `<menu id="MainMenu">
-    <menu-item id="item_1">@Strings.menu_label_1</menu-item>
-    <menu-item id="item_2">@Strings.menu_label_2</menu-item>
-</menu>`);
-}
-
-function createStringsFile(appName: string) {
-    createFile('resources/strings/strings.xml',
-        `<strings>
-    <string id="AppName">${appName}</string>
-
-    <string id="prompt">Click the menu button</string>
-
-    <string id="menu_label_1">Item 1</string>
-    <string id="menu_label_2">Item 2</string>
-</strings>`);
+    filesToCreate.push(createAppFile(appName));
+    filesToCreate.push(createDelegateFile(appName));
+    filesToCreate.push(createMenuDelegateFile(appName));
+    filesToCreate.push(createViewFile(appName));
 }
 
 function createResourceFiles(appName: string) {
-    createDrawablesFiles();
-    createLayoutFile();
-    createMenuFile();
-    createStringsFile(appName);
+    filesToCreate.push(createDrawablesFiles());
+    filesToCreate.push(createLayoutFile());
+    filesToCreate.push(createMenuFile());
+    filesToCreate.push(createStringsFile(appName));
 }
 
 async function getUUID() {
@@ -289,11 +280,23 @@ async function newIQProject() {
     } else {
         let newId = await getUUID();
 
-        getProjectName().then(projectName => {
+        let changeEvent = vscode.workspace.onDidChangeTextDocument(e => {
+            if (filesToCreate.length > 0) {
+                let nextSet = filesToCreate.pop();
+                createFile(nextSet[0], nextSet[1]);
+            } else {
+                changeEvent.dispose();
+            }
+        });
+        
+        getProjectName().then(async (projectName) => {
             if (projectName) {
                 createIQManifestFile(newId, projectName);
                 createSrcFiles(projectName);
                 createResourceFiles(projectName);
+
+                let nextSet = filesToCreate.pop();
+                createFile(nextSet[0], nextSet[1]);
             } else {
                 vscode.window.showErrorMessage("Please provide a name for this new app.");
             }
