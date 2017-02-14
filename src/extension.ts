@@ -245,7 +245,7 @@ function createFile(filename: string, content: string) {
             console.error(`error: ${err}`);
         });
     } else {
-        vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ app.");
+        vscode.window.showErrorMessage("You must open a folder before creating a new Connect IQ project.");
     }
 }
 
@@ -299,7 +299,7 @@ async function newIQProject() {
                 let nextSet = filesToCreate.pop();
                 createFile(nextSet[0], nextSet[1]);
             } else {
-                vscode.window.showErrorMessage("Please provide a name for this new app.");
+                vscode.window.showErrorMessage("Please provide a name for this new COnnect IQ app.");
             }
         });
     }    
@@ -307,7 +307,7 @@ async function newIQProject() {
 
 function getProjectName() {
     let options: vscode.InputBoxOptions = {
-        prompt: "Name for new ConnectIQ app: ",
+        prompt: "Name for new Connect IQ app: ",
         placeHolder: "app name"
     }
 

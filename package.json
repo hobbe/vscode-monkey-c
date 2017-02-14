@@ -69,7 +69,7 @@
         "commands": [
             {
                 "command": "extension.newiqproject",
-                "title": "New IQ Project"
+                "title": "New Connect IQ Project"
             }
         ]
     },
