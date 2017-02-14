@@ -285,10 +285,11 @@ async function newIQProject() {
                 let nextSet = filesToCreate.pop();
                 createFile(nextSet[0], nextSet[1]);
             } else {
+                vscode.workspace.saveAll(false);
                 changeEvent.dispose();
             }
         });
-        
+
         getProjectName().then(async (projectName) => {
             if (projectName) {
                 createIQManifestFile(newId, projectName);
