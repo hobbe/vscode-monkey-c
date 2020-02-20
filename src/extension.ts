@@ -276,7 +276,7 @@ async function getUUID() {
 
 async function newIQProject() {
     if (!vscode.workspace.rootPath) {
-        vscode.window.showErrorMessage("Please create and open a folder for your new Connect IQ app.")
+        vscode.window.showErrorMessage("Please create and open a folder for your new Connect IQ app.");
     } else {
         let newId = await getUUID();
 
@@ -299,7 +299,7 @@ async function newIQProject() {
                 let nextSet = filesToCreate.pop();
                 createFile(nextSet[0], nextSet[1]);
             } else {
-                vscode.window.showErrorMessage("Please provide a name for this new COnnect IQ app.");
+                vscode.window.showErrorMessage("Please provide a name for this new Connect IQ app.");
             }
         });
     }    
@@ -309,7 +309,7 @@ function getProjectName() {
     let options: vscode.InputBoxOptions = {
         prompt: "Name for new Connect IQ app: ",
         placeHolder: "app name"
-    }
+    };
 
     return vscode.window.showInputBox(options).then(value => {
         if (!value) {
