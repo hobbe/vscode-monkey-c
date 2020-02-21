@@ -53,6 +53,29 @@ Snippets available:
 
 - Not all of the language features implemented yet. Work in progress.
 
+## Development
+
+### Local development environment
+
+```sh
+git clone git@github.com:hobbe/vscode-monkey-c.git
+cd vscode-monkey-c
+npm install
+npm run compile
+```
+
+### Create VS Code `vsix` package
+
+```sh
+npm run extension:package
+```
+
+### Install to local VS Code
+
+```sh
+npm run extension:deploy
+```
+
 ## Release Notes
 
 See [changelog](./CHANGELOG.md).
