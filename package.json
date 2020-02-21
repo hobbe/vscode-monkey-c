@@ -116,7 +116,7 @@
         ]
     },
     "dependencies": {
-        "web-request": "^1.0.7"
+        "uuid": "^3.4.0"
     },
     "devDependencies": {
         "@types/glob": "^7.1.1",

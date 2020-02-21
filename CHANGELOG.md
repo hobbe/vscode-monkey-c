@@ -9,6 +9,7 @@ documented in this file.
 
 - Add command to create new project (adamcrossland)
 - Add snippets: class, View
+- Add files to new project command: `monkey.jungle`, `.vscode/tasks.json`
 
 ### Changed
 
@@ -17,6 +18,8 @@ documented in this file.
 - Refactor and update packages
 
 ### Removed
+
+- Remove dependency to external UUID service
 
 ## [0.3.1] - 2017-01-01
 
