@@ -1,5 +1,5 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"$schema": "https://raw.githubusercontent.com/ghisguth/vscode-monkey-c/master/syntaxes/monkeyc.tmLanguage.json",
 	"name": "Monkey C",
 	"patterns": [
 		{
@@ -238,16 +238,17 @@
 			]
 		},
 		"decorator": {
-				"name": "meta.decorator.mc",
-				"patterns": [
+			"name": "meta.decorator.mc",
+			"patterns": [
 				{
 					"match": "(?<!\\.|\\$)(\\(:([_$[:alpha:]][_$[:alnum:]]*)\\))",
 					"captures": {
 						"0": {
 							"name": "storage.type.decorator.mc"
 						}
+					}
 				}
-			}]
+			]
 		},
 		"enum-declaration": {
 			"name": "meta.enum.declaration.mc",
@@ -793,7 +794,7 @@
 		},
 		"type-builtin-literals": {
 			"name": "support.type.builtin.mc",
-			"match": "(?<!\\.|\\$)\\b(this|true|false|null)\\b(?!\\$)"
+			"match": "(?<!\\.|\\$)\\b(self|true|false|null)\\b(?!\\$)"
 		},
 		"type-paren-or-function-parameters": {
 			"name": "meta.type.paren.cover.mc",
@@ -1485,8 +1486,8 @@
 		"null-literal": {
 			"patterns": [
 				{
-				"name": "constant.language.null.mc",
-				"match": "(?<!\\.|\\$)\\bnull\\b(?!\\$)"
+					"name": "constant.language.null.mc",
+					"match": "(?<!\\.|\\$)\\bnull\\b(?!\\$)"
 				}
 			]
 		},
