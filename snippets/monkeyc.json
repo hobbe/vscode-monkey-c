@@ -7,5 +7,35 @@
       "}"
     ],
     "description": "Function Statement"
+  },
+  "New Class": {
+    "prefix": "class",
+    "body": [
+      "using Toybox.WatchUi as Ui;",
+      "",
+      "class ${1:name} {",
+      "",
+      "\tfunction initialize() {",
+      "\t\t$0",
+      "\t}",
+      "",
+      "}"
+    ],
+    "description": "New class"
+  },
+  "New View Class": {
+    "prefix": "view",
+    "body": [
+      "using Toybox.WatchUi as Ui;",
+      "",
+      "class ${1:name} extends Ui.View {",
+      "",
+      "\tfunction initialize() {",
+      "\t\tView.initialize();",
+      "\t}",
+      "\t$0",
+      "}"
+    ],
+    "description": "New class for a View"
   }
 }
