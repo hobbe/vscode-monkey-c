@@ -1,6 +1,6 @@
 {
     "name": "monkey-c",
-    "displayName": "Monkey C",
+    "displayName": "Connect IQ",
     "description": "Garmin Connect IQ Monkey C language support for VS Code",
     "icon": "images/icon.png",
     "galleryBanner": {
@@ -39,7 +39,8 @@
         "url": "https://github.com/ghisguth/vscode-monkey-c.git"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Snippets"
     ],
     "activationEvents": [
         "onCommand:extension.newiqproject"
@@ -52,9 +53,8 @@
                 "aliases": [
                     "Monkey C",
                     "monkeyc",
-                    "garmin",
+                    "Garmin",
                     "Connect IQ",
-                    "connect iq",
                     "connectiq"
                 ],
                 "extensions": [
@@ -63,6 +63,38 @@
                 "configuration": "./language-configuration.json"
             }
         ],
+        "configuration": {
+            "title": "Connect IQ",
+            "properties": {
+                "connectiq.sdkPath": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "markdownDescription": "Path to the [Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/)",
+                    "scope": "machine-overridable"
+                },
+                "connectiq.javaPath": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "description": "Path to a Java Runtime Environment (version <= 1.8). The Connect IQ SDK makes use of a Java VM",
+                    "scope": "machine-overridable"
+                },
+                "connectiq.developerKey": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "markdownDescription": "Path to Garmin developer certificate (*.der). The Connect IQ compiler requires a developer key to sign apps when they are compiled and packaged. See [Generating a Developer Key](https://developer.garmin.com/connect-iq/programmers-guide/getting-started/#generatingadeveloperkeyconnectiq1.3)",
+                    "scope": "window"
+                }
+            }
+        },
         "grammars": [
             {
                 "language": "monkeyc",
