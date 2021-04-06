@@ -682,36 +682,35 @@ async function newIQProject() {
     } else {
         const newId = await getUUID();
 
-        getProjectName().then(async (projectName) => {
-            if (projectName) {
-                createProjectFiles(newId, projectName);
-                createSrcFiles(projectName);
-                createResourceFiles(projectName);
+        const projectName = await getProjectName();
+        if (projectName) {
+            createProjectFiles(newId, projectName);
+            createSrcFiles(projectName);
+            createResourceFiles(projectName);
 
-                while (filesToCreate.length > 0) {
-                    const nextSet = filesToCreate.pop();
-                    createFile(nextSet[0], nextSet[1]);
-                }
-            } else {
-                vscode.window.showErrorMessage("Please provide a name for this new Connect IQ app.");
+            while (filesToCreate.length > 0) {
+                const nextSet = filesToCreate.pop();
+                createFile(nextSet[0], nextSet[1]);
             }
-        });
+        } else {
+            vscode.window.showErrorMessage("Please provide a name for this new Connect IQ app.");
+        }
     }
 }
 
-function getProjectName() {
+async function getProjectName() {
     let options: vscode.InputBoxOptions = {
         prompt: "Name for new Connect IQ app: ",
         placeHolder: "app name"
     };
 
-    return vscode.window.showInputBox(options).then(value => {
-        if (!value) {
-            return;
-        } else {
-            return value;
-        }
-    });
+    const value = await vscode.window.showInputBox(options);
+    if (!value) {
+        return;
+    }
+    else {
+        return value;
+    }
 }
 
 export async function activate(context: vscode.ExtensionContext) {
