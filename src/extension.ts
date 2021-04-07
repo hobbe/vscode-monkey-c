@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as os from "os";
+import { spawn } from "child_process";
 import { v4 as uuidv4 } from 'uuid';
+var clang = require("clang-format");
 
 type fileData = [string, string];
 let filesToCreate: Array<fileData> = new Array<fileData>();
@@ -515,7 +518,7 @@ class $ { appName } App extends App.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        return [new ${ appName}View(), new ${appName}Delegate()];
+        return [new ${appName}View(), new ${appName}Delegate()];
     }
 
 } `];
@@ -532,7 +535,7 @@ class $ { appName } Delegate extends Ui.BehaviorDelegate {
     }
 
     function onMenu() {
-        Ui.pushView(new Rez.Menus.MainMenu(), new ${ appName}MenuDelegate(), Ui.SLIDE_UP);
+        Ui.pushView(new Rez.Menus.MainMenu(), new ${appName}MenuDelegate(), Ui.SLIDE_UP);
         return true;
     }
 
@@ -715,7 +718,23 @@ async function getProjectName() {
 
 export async function activate(context: vscode.ExtensionContext) {
 
-    var disposable = vscode.commands.registerCommand('extension.newiqproject', newIQProject);
+    // Formatter
+    vscode.languages.registerDocumentFormattingEditProvider("monkeyc", {
+        provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
+            const exePackageLocation = path.dirname(clang.location);
+            var exe;
+            if (os.platform() === "win32") {
+                exe = path.join(exePackageLocation, "/bin/win32/clang-format.exe");
+            } else {
+                exe = path.join(exePackageLocation, `/bin/${os.platform()}_${os.arch()}/clang-format`);
+            }
 
+            spawn(exe, [document.fileName, "-i", "--style=file", "--fallback-style=google"]);
+            return [];
+        }
+    });
+
+    // New IQ Project
+    var disposable = vscode.commands.registerCommand('extension.newiqproject', newIQProject);
     context.subscriptions.push(disposable);
 }

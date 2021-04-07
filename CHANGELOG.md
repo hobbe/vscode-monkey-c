@@ -7,13 +7,15 @@ documented in this file.
 
 ### Added
 
+- Add formatter to Monkey C VSCode Extension by using clang-format and implement
+  basic function as proof of concept (Abasz)
 - Add command to create new project (adamcrossland)
 - Add snippets: class, View
 - Add files to new project command: `monkey.jungle`, `.vscode/tasks.json`
 
 ### Changed
 
-- Bump to version 0.4.0
+- Bump to version 0.4.1
 - Add `self` keyword, remove `this` keyword in grammar
 - Refactor and update packages
 
@@ -32,3 +34,10 @@ documented in this file.
 ### Added
 
 - Marketplace integration
+
+## [0.4.0]
+
+### Added
+
+- Formatter to Monkey C VSCode Extension by using clang-format and implement
+  basic function as proof of concept.

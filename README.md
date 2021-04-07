@@ -39,7 +39,7 @@ Snippets available:
 - `connectiq.javaPath`: Path to a Java Runtime Environment (version <= 1.8). The
   Connect IQ SDK makes use of a Java VM.
   This is used for VS Code tasks (tasks.json)
-- `connectiq.developerKey`: Path to Garmin developer certificate (*.der). The
+- `connectiq.developerKey`: Path to Garmin developer certificate (\*.der). The
   Connect IQ compiler requires a developer key to sign apps when they are
   compiled and packaged. See
   [Generating a Developer Key](https://developer.garmin.com/connect-iq/programmers-guide/getting-started/#generatingadeveloperkeyconnectiq1.3).

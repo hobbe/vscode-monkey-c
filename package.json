@@ -7,7 +7,7 @@
         "color": "#424242",
         "theme": "dark"
     },
-    "version": "0.4.0",
+    "version": "0.4.1",
     "publisher": "ghisguth",
     "maintainers": [
         "ghisguth",
@@ -20,7 +20,7 @@
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
-        "lint": "eslint src --ext ts",
+        "lint": "tslint -p ./",
         "pretest": "npm run compile && npm run lint",
         "test": "node ./out/test/runTest.js",
         "watch": "tsc -watch -p ./",
@@ -43,7 +43,8 @@
         "Snippets"
     ],
     "activationEvents": [
-        "onCommand:extension.newiqproject"
+        "onCommand:extension.newiqproject",
+        "onLanguage:monkeyc"
     ],
     "main": "./out/src/extension.js",
     "contributes": {
@@ -116,20 +117,19 @@
         ]
     },
     "dependencies": {
-        "uuid": "^3.4.0"
+        "clang-format": "^1.5.0",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@types/glob": "^7.1.1",
-        "@types/mocha": "^7.0.1",
-        "@types/node": "^13.7.1",
+        "@types/glob": "^7.1.3",
+        "@types/mocha": "^8.2.2",
+        "@types/node": "^14.14.37",
         "@types/vscode": "^1.42.0",
-        "@typescript-eslint/eslint-plugin": "^2.20.0",
-        "@typescript-eslint/parser": "^2.20.0",
-        "eslint": "^6.8.0",
         "glob": "^7.1.6",
-        "mocha": "^7.0.1",
-        "typescript": "^3.7.5",
-        "vsce": "^1.73.0",
-        "vscode-test": "^1.3.0"
+        "mocha": "^8.3.2",
+        "tslint": "^6.1.3",
+        "typescript": "^4.2.3",
+        "vsce": "^1.87.1",
+        "vscode-test": "^1.5.2"
     }
 }
